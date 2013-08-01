@@ -1,0 +1,10 @@
+extends index
+
+block postContent
+    h1=activePost.title
+    h4
+        | by #{activePost.author}
+    small.muted #{fromNow(activePost.published)}
+    hr
+    div.intro
+        !{markDown(activePost.intro)}

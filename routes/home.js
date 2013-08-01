@@ -1,8 +1,10 @@
+//home page route
+var routes = require("../helpers/routes");
 
-/*
- * GET home page.
- */
-
-exports.index = function(req, res){
-  res.render('index', { title: 'Express' });
+exports.index = function (req, res) {
+    res.redirect(routes.posts);
 };
+
+exports.about = function (req, res) {
+    res.render('home/about', {title: 'About'});
+}

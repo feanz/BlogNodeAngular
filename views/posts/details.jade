@@ -6,7 +6,8 @@ block postContent
         | by #{activePost.author}
     small.muted #{fromNow(activePost.published)}
     hr
-    a(href='#{node.posts.editRoute(activePost)}') Edit
+    if user && user.roles.isAdmin
+        a(href='#{node.posts.editRoute(activePost)}') Edit
     div.intro
         !{markDown(activePost.intro)}
     div.extended

@@ -7,6 +7,7 @@ var express = require('express')
     , node = require('./node').node
     , home = require('./routes/home')
     , posts = require('./routes/posts')
+    , auth = require('./routes/authentication')
     , htmlHelpers = require('./helpers/htmlHelpers').helpers
     , utils = require('./helpers/util')
     , http = require('http')
@@ -18,7 +19,14 @@ var app = express();
 var l = new utils.Logger();
 var showdown = new showDown.converter();
 
-// all environments
+var authenticated = function (req, res, next) {
+    if (req.session.user && req.session.user.isAuthenticated) {
+        res.locals.user = req.session.user;
+        next();
+    } else {
+        res.redirect(node.auth.login);
+    }
+}
 
 app.configure('development', function () {
     app.set('port', process.env.PORT || 3000);
@@ -27,6 +35,8 @@ app.configure('development', function () {
     app.use(express.favicon());
     app.use(express.logger('dev'));
     app.use(express.bodyParser());
+    app.use(express.cookieParser('random passphrase'));
+    app.use(express.session());
     app.use(expressValidator());
     app.use(express.methodOverride());
     app.use(app.router);
@@ -40,17 +50,22 @@ if ('development' == app.get('env')) {
 
 //home
 app.get(node.home.index, home.index);
-app.get(node.home.about, home.about);
+app.get(node.home.about, authenticated, home.about);
+
+//auth
+app.get(node.auth.login, auth.login);
+app.post(node.auth.login, auth.loginUser);
+
+app.get(node.auth.logout, auth.logout);
 
 //posts
-app.get(node.posts.index, posts.index);
-app.get(node.posts.create, posts.create);
-app.get(node.posts.details, posts.details);
-app.get(node.posts.edit, posts.edit);
+app.get(node.posts.index, authenticated, posts.index);
+app.get(node.posts.create, authenticated, posts.create);
+app.get(node.posts.details, authenticated, posts.details);
+app.get(node.posts.edit, authenticated, posts.edit);
 
-app.post(node.posts.edit, posts.update);
-app.post(node.posts.create, posts.createPost);
-
+app.post(node.posts.edit, authenticated, posts.update);
+app.post(node.posts.create, authenticated, posts.createPost);
 
 //locals
 app.locals.node = node;
@@ -69,8 +84,10 @@ app.locals.markDown = function (input) {
     }
     return '';
 };
-app.locals.toTitleCase = function(str){
-    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+app.locals.toTitleCase = function (str) {
+    return str.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
 };
 
 http.createServer(app).listen(app.get('port'), function () {

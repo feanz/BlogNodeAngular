@@ -1,3 +1,9 @@
+div.row
+    div(class='col-lg-1 col-offset-11 text-right')
+        if user
+            a(href='#{node.auth.logout}') Logout
+        else
+            a(href='#{node.auth.login}') Login
 div.navbar
     div.navbar-inner
         a.navbar-brand BlogR
@@ -6,5 +12,6 @@ div.navbar
                 a(href='#{node.posts.index}') Posts
             li
                 a(href='#{node.home.about}') About
-            li
-                a(href='#{node.posts.create}') Create a Post
+            if user && user.roles.isAdmin
+                li
+                    a(href='#{node.posts.create}') Create a Post

@@ -1,0 +1,17 @@
+extends ../layout
+
+block content
+
+    div.container
+        div.row
+            div.col-lg-5
+                form(id='login', method='post', action='#{node.auth.login}')
+                    fieldset
+                    legend Login
+                    div.form-group
+                        label(for='username') Username
+                        input(name='username', class='form-control')
+                    div.form-group
+                        label(for='password') Password
+                        input(name='password', type='password',class='form-control')
+                    input(type='submit', value='Login', class='btn btn-primary')

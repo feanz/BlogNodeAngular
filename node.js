@@ -20,16 +20,25 @@ var posts = {
     }
 };
 
+var auth = {
+    login:'/login',
+    logout:'/logout',
+    views: {
+        login:'auth/login'
+    }
+};
+
 var home = {
     index:'/',
     about: '/about',
     views: {
-        home: 'home/index',
+        index: 'home/index',
         about: 'home/about'
     }
 }
 
 node.home = home;
 node.posts = posts;
+node.auth = auth;
 
 exports.node = node;

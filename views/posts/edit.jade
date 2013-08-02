@@ -1,0 +1,12 @@
+extends ../layout
+block content
+    div.container
+    div.row
+        div.col-lg-12
+            form(id='editpost', method='post',action='#{node.posts.editRoute(post)}')
+                fieldset
+                    legend Edit Post
+                    +validationSummary('Edit Post',post);
+                    input(type='hidden', id='id', name='id', value='#{post.id}')
+                    include createOrEdit
+                    input(type='submit', value='Update', id='update', class='btn btn-primary')

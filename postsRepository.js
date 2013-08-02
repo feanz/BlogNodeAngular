@@ -49,9 +49,9 @@ exports.deletePost = function (id, callback) {
 
 exports.updatePosts = function (post, callback) {
     var err;
-    var post = postsDb[post.id];
+    var existing = postsDb[post.id];
 
-    if (!post) {
+    if (!existing) {
         err = { message: 'No post found'};
     } else {
         postsDb[post.id] = post;

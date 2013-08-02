@@ -1,0 +1,11 @@
+div.form-group
+    label(for='title') Title
+    input(id='title',type='text', name='title', placeholder='Add title here...', class='form-control', value='#{post.title}')
+div.form-group
+    label(for='intro') Intro
+    textarea(id='intro', name='intro', placeholder='Add intro here...', class='form-control', rows='6')
+        !{post.intro}
+div.form-group
+    label(for='extended') Extended
+    textarea(id='extended', name='extended', placeholder='Add extended here...', class='form-control', rows='6')
+        !{post.extended}

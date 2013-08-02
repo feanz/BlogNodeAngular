@@ -17,7 +17,6 @@ exports.createPost = function (req, res) {
     var post = new Post(req.body);
     if (errors) {
         post.errors = errors
-        console.log(post);
         res.render(node.posts.views.create, {title: 'Create Post', post: post});
     } else {
         repo.addPosts(post, function (err, result) {
@@ -26,6 +25,42 @@ exports.createPost = function (req, res) {
             } else {
                 post.errors = {msg: err.message};
                 res.render(node.posts.views.create, {title: 'Create Post', post: post});
+            }
+        });
+    }
+};
+
+exports.edit = function (req, res) {
+    var viewModel = {};
+    var id = req.params.post_id;
+
+    repo.getPostById(id, function (err, post) {
+        if (err || !post) {
+            console.log('no post found');
+            res.send(404);
+        } else {
+            viewModel.title = 'Edit Post';
+            viewModel.post = post;
+            res.render(node.posts.views.edit, viewModel);
+        }
+    });
+};
+
+exports.update = function(req, res){
+    console.log('update post')
+    var errors = validatePosts(req);
+    var post = new Post(req.body);
+    if (errors) {
+        post.errors = errors
+        res.render(node.posts.views.edit, {title: 'Edit Post', post: post});
+    }else{
+        repo.updatePosts(post, function (err, result) {
+            if (!err) {
+                res.redirect(node.posts.detailsRoute(post));
+            } else {
+                console.log(err);
+                post.errors = {msg: err.message};
+                res.render(node.posts.views.edit, {title: 'Edit Post', post: post});
             }
         });
     }
@@ -52,21 +87,16 @@ exports.details = function (req, res) {
 };
 
 var Post = function (post) {
-    if (post) {
-        this.title = (post && post.title) ? post.title : '';
-        this.intro = (post && post.intro) ? post.intro : '';
-        this.extended = (post && post.extended) ? post.extended : '';
-        this.publishedAt = (post && post.publishedAt) ? post.publishedAt : new Date();
-        this.author = (post && post.author) ? post.author : 'Dean Titface';
-    } else {
-        this.title = '';
-        this.intro = '';
-        this.extended = '';
-    }
+    this.id = (post && post.id) ? post.id : 0;
+    this.title = (post && post.title) ? post.title : '';
+    this.intro = (post && post.intro) ? post.intro : '';
+    this.extended = (post && post.extended) ? post.extended : '';
+    this.publishedAt = (post && post.publishedAt) ? post.publishedAt : new Date();
+    this.author = (post && post.author) ? post.author : 'Dean Titface';
 }
 
 var validatePosts = function (req) {
-    req.checkBody('title', { len: 'Max length 30', notEmpty: 'Title field Required'}).len(1,30).notEmpty();
+    req.checkBody('title', { len: 'Max length 30', notEmpty: 'Title field Required'}).len(1, 30).notEmpty();
     req.checkBody('intro', 'is Required').notEmpty();
     req.checkBody('extended', 'is Required').notEmpty();
 

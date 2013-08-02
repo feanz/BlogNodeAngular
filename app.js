@@ -46,7 +46,9 @@ app.get(node.home.about, home.about);
 app.get(node.posts.index, posts.index);
 app.get(node.posts.create, posts.create);
 app.get(node.posts.details, posts.details);
+app.get(node.posts.edit, posts.edit);
 
+app.post(node.posts.edit, posts.update);
 app.post(node.posts.create, posts.createPost);
 
 
@@ -54,7 +56,7 @@ app.post(node.posts.create, posts.createPost);
 app.locals.node = node;
 app.locals.html = htmlHelpers;
 
-//todo: move these locals in helpers
+//todo: move these locals into helpers
 app.locals.fromNow = function (date) {
     if (date) {
         return moment(date).fromNow();
@@ -67,7 +69,6 @@ app.locals.markDown = function (input) {
     }
     return '';
 };
-
 app.locals.toTitleCase = function(str){
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 };

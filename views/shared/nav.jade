@@ -1,8 +1,10 @@
 div.navbar
     div.navbar-inner
-        a.brand BlogR
-        ul.nav
+        a.navbar-brand BlogR
+        ul(class='nav navbar-nav')
             li
-                a(href='#{routes.posts}') Posts
+                a(href='#{node.posts.index}') Posts
             li
-                a(href='#{routes.about}') About
+                a(href='#{node.home.about}') About
+            li
+                a(href='#{node.posts.create}') Create a Post

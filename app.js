@@ -3,10 +3,11 @@
  */
 
 var express = require('express')
-    , routes = require('./helpers/routes')
+    , expressValidator = require('express-validator')
+    , node = require('./node').node
     , home = require('./routes/home')
     , posts = require('./routes/posts')
-    , htmlHelpers = require('./helpers/htmlHelpers')
+    , htmlHelpers = require('./helpers/htmlHelpers').helpers
     , utils = require('./helpers/util')
     , http = require('http')
     , path = require('path')
@@ -26,6 +27,7 @@ app.configure('development', function () {
     app.use(express.favicon());
     app.use(express.logger('dev'));
     app.use(express.bodyParser());
+    app.use(expressValidator());
     app.use(express.methodOverride());
     app.use(app.router);
     app.use(express.static(path.join(__dirname, 'public')));
@@ -37,17 +39,22 @@ if ('development' == app.get('env')) {
 }
 
 //home
-app.get('/', home.index);
-app.get('/about', home.about);
+app.get(node.home.index, home.index);
+app.get(node.home.about, home.about);
 
 //posts
-app.get('/posts', posts.index);
-app.get('/posts/:post_id', posts.details);
+app.get(node.posts.index, posts.index);
+app.get(node.posts.create, posts.create);
+app.get(node.posts.details, posts.details);
+
+app.post(node.posts.create, posts.createPost);
+
 
 //locals
-//routes local used in view so we have one central location to store routes
-app.locals.routes = routes;
-app.locals.helpers = htmlHelpers.helpers;
+app.locals.node = node;
+app.locals.html = htmlHelpers;
+
+//todo: move these locals in helpers
 app.locals.fromNow = function (date) {
     if (date) {
         return moment(date).fromNow();
@@ -61,7 +68,9 @@ app.locals.markDown = function (input) {
     return '';
 };
 
-l.log(htmlHelpers.helpers.postLink({id: 1, title: 'title', author: 'author'}));
+app.locals.toTitleCase = function(str){
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+};
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));

@@ -1,0 +1,21 @@
+extends ../layout
+block content
+    div.container
+        div.row
+            div.col-lg-12
+                form(id='create post', method='post',action='#{node.posts.create}')
+                    fieldset
+                        legend Create Post
+                        +validationSummary('Creating Post',post);
+                        div.form-group
+                            label(for='title') Title
+                            input(id='title',type='text', name='title', placeholder='Add title here...', class='form-control', value='#{post.title}')
+                        div.form-group
+                            label(for='intro') Intro
+                            textarea(id='intro', name='intro', placeholder='Add intro here...', class='form-control', rows='6')
+                                !{post.intro}
+                        div.form-group
+                            label(for='extended') Extended
+                            textarea(id='extended', name='extended', placeholder='Add extended here...', class='form-control', rows='6')
+                                !{post.extended}
+                        input(type='submit', value='Create', id='create', class='btn btn-primary')

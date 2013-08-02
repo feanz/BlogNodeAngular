@@ -1,2 +1,10 @@
 mixin postLink(post)
-    <a href='/posts/#{post.id}' > #{post.title} <small class="muted"> By #{post.author} </small></a>
+    <a href='#{node.posts.detailsRoute(post)}'> #{post.title} <small class="text-muted"> By #{post.author} </small></a>
+
+mixin validationSummary(msg,item)
+    if item.errors
+        div(class='alert alert-danger')
+            strong Error #{msg}
+            hr
+            each error in post.errors
+                p #{toTitleCase(error.param)}: #{error.msg}

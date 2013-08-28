@@ -4,11 +4,11 @@
 
 var express = require('express')
     , expressValidator = require('express-validator')
-    , node = require('./node').node
+    , node = require('./nodemvc').node
     , home = require('./routes/home')
     , posts = require('./routes/posts')
     , auth = require('./routes/authentication')
-    , htmlHelpers = require('./helpers/htmlHelpers').helpers
+    , htmlHelpers = require('./helpers/htmlHelpers')
     , utils = require('./helpers/util')
     , http = require('http')
     , path = require('path')
@@ -19,6 +19,7 @@ var app = express();
 var l = new utils.Logger();
 var showdown = new showDown.converter();
 
+//todo move this into seperate class
 var authenticated = function (req, res, next) {
     if (req.session.user && req.session.user.isAuthenticated) {
         res.locals.user = req.session.user;
@@ -28,19 +29,48 @@ var authenticated = function (req, res, next) {
     }
 }
 
+var notFound = function (req, res, next) {
+    res.statusCode = 404;
+    res.description = 'Not found';
+    res.render(node.errors.views.notFound);
+};
+
+var errorHandler = function (err, req, res, next) {
+    console.log(err);
+    res.statusCode = 500;
+    res.description = 'Server Error';
+    if (err) {
+        res.render(node.errors.views.problem);
+    }
+}
+
+//config all environments
+app.set('port', process.env.PORT || 3000);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
+app.use(express.favicon());
+app.use(express.logger('dev'));
+app.use(express.bodyParser());
+app.use(express.cookieParser('random passphrase'));
+app.use(express.session());
+app.use(expressValidator());
+app.use(express.methodOverride());
+app.use(app.router);
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use("/test",express.static(path.join(__dirname, 'test')));
+//custom route to support e2e
+app.use("/base/test",express.static(path.join(__dirname, 'test')));
+
+
+app.use(notFound);
+
 app.configure('development', function () {
-    app.set('port', process.env.PORT || 3000);
-    app.set('views', __dirname + '/views');
-    app.set('view engine', 'jade');
-    app.use(express.favicon());
-    app.use(express.logger('dev'));
-    app.use(express.bodyParser());
-    app.use(express.cookieParser('random passphrase'));
-    app.use(express.session());
-    app.use(expressValidator());
-    app.use(express.methodOverride());
-    app.use(app.router);
-    app.use(express.static(path.join(__dirname, 'public')));
+    //dev config
+});
+
+app.configure('production',function(){
+    app.use(errorHandler);
 });
 
 // development only
@@ -59,7 +89,7 @@ app.post(node.auth.login, auth.loginUser);
 app.get(node.auth.logout, auth.logout);
 
 //posts
-app.get(node.posts.index, authenticated, posts.index);
+app.get(node.posts.index, posts.index);
 app.get(node.posts.create, authenticated, posts.create);
 app.get(node.posts.details, authenticated, posts.details);
 app.get(node.posts.edit, authenticated, posts.edit);
@@ -70,6 +100,7 @@ app.post(node.posts.create, authenticated, posts.createPost);
 //locals
 app.locals.node = node;
 app.locals.html = htmlHelpers;
+app.locals.isAngular = true;
 
 //todo: move these locals into helpers
 app.locals.fromNow = function (date) {

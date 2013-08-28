@@ -1,9 +1,20 @@
-var node = require("../node").node;
+var node = require("../nodemvc").node;
 var repo = require('../postsRepository');
 
 exports.index = function (req, res) {
     repo.listPosts(function (err, posts) {
-        res.render(node.posts.views.index, {title: 'Posts', posts: posts});
+        if(!err){
+            res.format({
+                html: function(){
+                    res.render(node.posts.views.index, {title: 'Posts', posts: posts});
+                },
+                json: function(){
+                    res.json(posts);
+                }
+            });
+        }else{
+            res.send(404, "Not found");
+        }
     });
 };
 

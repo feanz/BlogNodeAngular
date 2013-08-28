@@ -35,8 +35,16 @@ var home = {
         index: 'home/index',
         about: 'home/about'
     }
-}
+};
 
+var errors = {
+    views:{
+        notFound:'errors/404',
+        problem:'errors/500'
+    }
+};
+
+node.errors = errors;
 node.home = home;
 node.posts = posts;
 node.auth = auth;

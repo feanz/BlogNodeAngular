@@ -1,4 +1,4 @@
-var node = require("../node").node;
+var node = require("../nodemvc").node;
 
 exports.index = function (req, res) {
     console.log('home index');

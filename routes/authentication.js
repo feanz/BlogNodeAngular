@@ -1,4 +1,4 @@
-var node = require("../node").node;
+var node = require("../nodemvc").node;
 
 exports.login = function (req, res) {
     res.render(node.auth.views.login, {title: 'Login'});

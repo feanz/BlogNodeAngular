@@ -6,5 +6,6 @@ mixin validationSummary(msg,item)
         div(class='alert alert-danger')
             strong Error #{msg}
             hr
-            each error in post.errors
-                p #{toTitleCase(error.param)}: #{error.msg}
+            ul
+                each error in post.errors
+                    li #{toTitleCase(error.param)} #{error.msg}

@@ -30,4 +30,26 @@ describe('BlogR controllers', function() {
             expect(scope.orderProp).toBe('published');
         });
     });
+
+    describe('Post Details Controller', function(){
+        var scope, $httpBackend, ctrl;
+
+        beforeEach(inject(function(_$httpBackend_, $rootScope, $routeParams, $controller) {
+            $httpBackend = _$httpBackend_;
+            $httpBackend.when('GET', 'posts/1').respond({title:'Why i love node'});
+
+            $routeParams.postId = '1';
+
+            scope = $rootScope.$new();
+            ctrl = $controller(PostDetailsController, {$scope: scope});
+        }));
+
+
+        it('should fetch post detail', function() {
+            expect(scope.post).toBeUndefined();
+            $httpBackend.flush();
+
+            expect(scope.post).toEqual({title:'Why i love node'});
+        });
+    });
 });

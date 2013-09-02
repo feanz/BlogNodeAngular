@@ -1,3 +1,5 @@
+var _ = require('underscore')
+
 postsDb = new Array();
 postsDb[0] = {id: 1, title: 'Why i love node', author: 'Steve Ballbag', published: new Date(2013,06,14),
     intro: "Small intro text goes in this field",
@@ -33,8 +35,9 @@ exports.addPosts = function (post, callback) {
 
 exports.getPostById = function (id, callback) {
     var err;
-    var post = postsDb[id];
-
+    var post = _.find(postsDb, function(post){
+        return post.id == id;
+    });
     if (!post) {
         err = {message: 'No post found'};
     }

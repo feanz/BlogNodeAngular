@@ -1,10 +1,11 @@
 body {
-  padding: 50px;
+    padding-top: 50px;
 }
 
-.about {
-    margin-left: 15px;
+#main-container{
+    padding: 30px 5px;
 }
+
 
 #posts{
     list-style: none;
@@ -12,4 +13,13 @@ body {
 }
 #posts > li{
     padding-top: 5px;
+}
+
+
+.inline-input{
+    width:150px;
+}
+.inline-select{
+    width:150px;
+    margin-left: 4px;
 }

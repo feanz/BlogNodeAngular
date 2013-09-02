@@ -1,0 +1,10 @@
+h1 {{post.title}}
+p.lead {{post.intro}}
+p.text-muted
+    | By {{post.author}}
+    | Published on {{post.published}}
+p {{post.extended}}
+
+br
+br
+{{post | json}}

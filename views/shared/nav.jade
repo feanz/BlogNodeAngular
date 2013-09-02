@@ -1,17 +1,18 @@
-div.row
-    div(class='col-lg-1 col-offset-11 text-right')
-        if user
-            a(href='#{node.auth.logout}') Logout
-        else
-            a(href='#{node.auth.login}') Login
-div.navbar
-    div.navbar-inner
-        a.navbar-brand BlogR
-        ul(class='nav navbar-nav')
-            li
-                a(href='#{node.posts.index}') Posts
-            li
-                a(href='#{node.home.about}') About
-            if user && user.roles.isAdmin
+div(class="navbar navbar-inverse navbar-fixed-top")
+    div.container
+        div.navbar-header
+            button(type="button", class="navbar-toggle", data-toggle="collapse", data-tagert=".navbar-collapse")
+            a.navbar-brand BlogR
+        div(class="collapse navbar-collapse")
+            ul(class='nav navbar-nav')
                 li
-                    a(href='#{node.posts.create}') Create a Post
+                    a(href='#{node.posts.index}') Posts
+                li
+                    a(href='#{node.home.about}') About
+                if user && user.roles.isAdmin
+                    li
+                        a(href='#{node.posts.create}') Create a Post
+            if user
+                a(href='#{node.auth.logout}') Logout
+            else
+                a(href='#{node.auth.login}') Login

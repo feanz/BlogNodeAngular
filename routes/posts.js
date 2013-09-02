@@ -78,8 +78,26 @@ exports.update = function(req, res){
 };
 
 exports.details = function (req, res) {
-    var viewModel = {};
     var id = req.params.post_id;
+    res.format({
+        html: function(){
+            return htmlDetailsRequest(id, res)
+        },
+        json: function(){
+            repo.getPostById(id, function (err, post) {
+                if (err || !post) {
+                    res.send(404, err.message);
+                } else {
+                    res.json(post);
+                }
+            });
+        }
+    });
+};
+
+var htmlDetailsRequest = function(id,res){
+    console.log('html')
+    var viewModel = {};
     repo.listPosts(function (err, postList) {
         if (!err && postList) {
             viewModel.posts = postList;

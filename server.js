@@ -5,6 +5,7 @@
 var express = require('express')
     , expressValidator = require('express-validator')
     , node = require('./nodemvc').node
+    , routes = require('./routes')
     , home = require('./routes/home')
     , posts = require('./routes/posts')
     , auth = require('./routes/authentication')
@@ -78,6 +79,9 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
+//handle angular partials
+app.get('/partials/:name', routes.partials);
+
 //home
 app.get(node.home.index, home.index);
 app.get(node.home.about, authenticated, home.about);
@@ -90,8 +94,9 @@ app.get(node.auth.logout, auth.logout);
 
 //posts
 app.get(node.posts.index, posts.index);
+app.get(node.posts.details, posts.details);
+
 app.get(node.posts.create, authenticated, posts.create);
-app.get(node.posts.details, authenticated, posts.details);
 app.get(node.posts.edit, authenticated, posts.edit);
 
 app.post(node.posts.edit, authenticated, posts.update);

@@ -1,0 +1,18 @@
+h2 Recent Posts
+div.row
+    div.col-lg-4
+        form(role="form", class="form-inline")
+            div.form-group
+                label(class='sr-only', for='query') Filter Posts
+                input(type="text", id="query", ng-model="query", class="form-control inline-input", placeholder="Filter Posts")
+            div.form-group
+                label(class='sr-only', for='orderBy') Order Posts
+                select(ng-model="orderProp", class="form-control inline-select", id='orderBy')
+                    option(value="published") Newest
+                    option(value="title") Alphabetical
+        hr
+        ul(id="posts")
+            li(ng-repeat="post in posts | filter:query | orderBy: orderProp")
+                <a href='#/posts/{{post.id}}'> {{post.title}} <small class="text-muted"> By {{post.author}} </small></a>
+    div.col-lg-8
+        p(ng-if="!activePost") Select a Posts

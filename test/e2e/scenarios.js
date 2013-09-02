@@ -25,5 +25,24 @@ describe('BlogR App', function() {
             expect(repeater('#posts li', 'Posts List').row(0)).
                 toEqual(["Is Scarla the new lisp","Nick Dicksplash"]);
         });
+
+        it('should render post specific link', function() {
+            input('query').enter('Why');
+
+            element('#posts li a').click();
+
+            expect(browser().location().url()).toBe('/posts/1');
+        });
     });
+
+    describe('Post Details View', function(){
+
+        beforeEach(function(){
+            browser().navigateTo('#/posts/1');
+        })
+
+        it('should display Why i love node post', function() {
+            expect(binding('post.title')).toBe('Why i love node');
+        });
+    })
 });

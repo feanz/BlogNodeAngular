@@ -23,3 +23,17 @@ body {
     width:150px;
     margin-left: 4px;
 }
+
+dl.inline dt, dl.inline dd {
+    float: left;
+    margin: 0 0.5em 0 0;
+}
+dl.inline dd + dt, dl.inline dd + dd {
+    clear: left
+}
+dl.inline dd + dd {
+    float: none
+}
+dl.inline dt {
+    font-weight: bold
+}

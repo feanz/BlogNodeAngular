@@ -2,9 +2,30 @@ h1 {{post.title}}
 p.lead {{post.intro}}
 p.text-muted
     | By {{post.author}}
-    | Published on {{post.published}}
+    | Published on {{post.published | date:"MM/dd/yyyy"}}
 p {{post.extended}}
 
+h3 Tags
+dl(class='inline')
+    div(ng-repeat='tag in tags')
+        dt {{tag}}
+        dd(ng-repeat-end, ng-bind-html-unsafe="post.tags.indexOf(tag) | checkmark")
 br
-br
-{{post | json}}
+div(ng-show='!editMode')
+    button(class='btn btn-primary', ng-click='setEditMode()') Edit
+div(ng-show='editMode')
+    form(role='form')
+        legend Edit Post
+        div.form-group
+            label(for='') Title
+            input(type='text',id='title', class='form-control', ng-model='post.title')
+        div.form-group
+            label(for='') Intro
+            input(type='text',id='intro', class='form-control', ng-model='post.intro')
+        div.form-group
+            label(for='') Extended
+            input(type='text',id='extended', class='form-control', ng-model='post.extended')
+        button(type='button', class='btn btn-primary', ng-click='save()') Save
+        &nbsp;
+        button(type='button', class='btn btn-primary', ng-click='cancel()') Cancel
+

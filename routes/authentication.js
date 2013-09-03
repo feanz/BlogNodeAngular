@@ -6,6 +6,7 @@ exports.login = function (req, res) {
 
 exports.loginUser = function (req, res) {
     if (req.body.username == 'admin' && req.body.password == 'password1') {
+        console.log('auth');
         req.session.user = {isAuthenticated: true, username: req.body.username, roles: { isAdmin: true }};
         res.redirect(node.posts.index);
     } else if (req.body.username == 'user' && req.body.password == 'password1') {

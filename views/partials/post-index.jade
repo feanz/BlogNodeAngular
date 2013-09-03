@@ -13,6 +13,6 @@ div.row
         hr
         ul(id="posts")
             li(ng-repeat="post in posts | filter:query | orderBy: orderProp")
-                <a href='#/posts/{{post.id}}'> {{post.title}} <small class="text-muted"> By {{post.author}} </small></a>
+                <a href='/posts/{{post.id}}'> {{post.title}} <small class="text-muted"> By {{post.author}} </small></a>
     div.col-lg-8
         p(ng-if="!activePost") Select a Posts

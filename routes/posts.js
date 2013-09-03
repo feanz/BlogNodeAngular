@@ -63,15 +63,32 @@ exports.update = function(req, res){
     var post = new Post(req.body);
     if (errors) {
         post.errors = errors
-        res.render(node.posts.views.edit, {title: 'Edit Post', post: post});
+        res.format({
+            html:function(){res.render(node.posts.views.edit, {title: 'Edit Post', post: post})},
+            json:function(){res.json(400,post)}
+        });
     }else{
         repo.updatePosts(post, function (err, result) {
             if (!err) {
-                res.redirect(node.posts.detailsRoute(post));
+                res.format({
+                    html:function(){
+                        res.redirect(node.posts.detailsRoute(post));
+                    },
+                    json:function(){
+                        res.json(200, post);
+                    }
+                });
             } else {
                 console.log(err);
                 post.errors = {msg: err.message};
-                res.render(node.posts.views.edit, {title: 'Edit Post', post: post});
+                res.format({
+                    html:function(){
+                        res.render(node.posts.views.edit, {title: 'Edit Post', post: post});
+                    },
+                    json:function(){
+                        res.json(500, err.message);
+                    }
+                });
             }
         });
     }

@@ -9,7 +9,7 @@ describe('BlogR controllers', function() {
         // with the same name as the service.
         beforeEach(inject(function(_$httpBackend_, $rootScope, $controller) {
             $httpBackend = _$httpBackend_;
-            $httpBackend.when('GET','posts').
+            $httpBackend.when('GET','/posts').
                 respond([{title: 'Why i love node'},
                     {title: 'Is scarla the new lisp'}]);
 
@@ -36,7 +36,7 @@ describe('BlogR controllers', function() {
 
         beforeEach(inject(function(_$httpBackend_, $rootScope, $routeParams, $controller) {
             $httpBackend = _$httpBackend_;
-            $httpBackend.when('GET', 'posts/1').respond({title:'Why i love node'});
+            $httpBackend.when('GET', '/posts/1').respond({title:'Why i love node'});
 
             $routeParams.postId = '1';
 
@@ -44,9 +44,32 @@ describe('BlogR controllers', function() {
             ctrl = $controller(PostDetailsController, {$scope: scope});
         }));
 
+        it('should set editMode to true on setEditMode', function() {
+            expect(scope.editMode).toEqual(false);
+
+            scope.setEditMode();
+
+            expect(scope.editMode).toEqual(true);
+        });
+
+        it('should edit post to a copy of post on setEditMode', function() {
+
+            $httpBackend.flush();
+
+            expect(isEmpty(scope.editPost)).toBe(true);
+
+            scope.setEditMode();
+
+            expect(scope.editPost).toEqual({title:'Why i love node'});
+        });
+
+        function isEmpty(obj) {
+            return Object.keys(obj).length === 0;
+        }
 
         it('should fetch post detail', function() {
             expect(scope.post).toBeUndefined();
+
             $httpBackend.flush();
 
             expect(scope.post).toEqual({title:'Why i love node'});

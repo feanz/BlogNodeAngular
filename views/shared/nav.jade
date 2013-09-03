@@ -12,7 +12,9 @@ div(class="navbar navbar-inverse navbar-fixed-top")
                 if user && user.roles.isAdmin
                     li
                         a(href='#{node.posts.create}') Create a Post
-            if user
-                a(href='#{node.auth.logout}') Logout
-            else
-                a(href='#{node.auth.login}') Login
+                if user
+                    li
+                        a(href='##{node.auth.logout}') Logout
+                else
+                    li
+                        a(href='#{node.auth.login}') Login
